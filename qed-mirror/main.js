@@ -39,7 +39,7 @@ const GRAPH_Y = 500;
 const ARROW_Y = 550;
 const ARROW_LENGTH = 30;
 const FINAL_ARROW_X = X0 + W* (PATHS_COUNT/2 - 1);
-const FINAL_ARROW_Y = 700;
+const FINAL_ARROW_Y = 650;
 
 // helpers
 
