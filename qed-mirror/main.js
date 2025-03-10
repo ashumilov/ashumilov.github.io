@@ -31,7 +31,8 @@ ctx.font = "14px Arial";
 const W = 40;
 const PATHS_COUNT = 13;
 
-const ANGLE0 = 300;
+const ARROW_ANGLE0 = 180;
+const ARROW_SPEED = 5;
 
 const X0 = 50;
 const Y0 = 50;
@@ -149,12 +150,12 @@ function path(n, stops) {
         n: n,
         points: calculatePoints(stops),
         index: 0,
-        angle: ANGLE0,
+        angle: ARROW_ANGLE0,
         stopped: false,
         step() {
             if (this.index < this.points.length - 1) {
                 this.index = this.index + 1;
-                this.angle = this.angle - 6;
+                this.angle = this.angle - ARROW_SPEED;
                 if (this.angle < 0) {
                     this.angle += 360;
                 }
@@ -197,8 +198,8 @@ const Ps = PATHS_COUNT;
 
 // define static objects
 
-const S = rect(X0, Y0, 2, 2, "S", false);  // source
-const D = rect(550, Y0, 2, 2, "P", false); // detector
+const S = rect(X0 + 75, Y0, 2, 2, "S", false);  // source
+const D = rect(475, Y0, 2, 2, "P", false); // detector
 const Q = rect(300, 45, 10, 20, "Q");      // screen
 
 // mirror
