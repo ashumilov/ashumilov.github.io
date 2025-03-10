@@ -172,10 +172,21 @@ function path(n, stops) {
                     const arr_y = ARROW_Y;
                     drawArrow(arr_x, arr_y, ARROW_LENGTH, this.angle);
                     // cross
-                    lineToAngle(X0 + n*W+W/2, GRAPH_Y - this.index*0.2, 5, 45);
-                    lineToAngle(X0 + n*W+W/2, GRAPH_Y - this.index*0.2, 5, 135);
-                    lineToAngle(X0 + n*W+W/2, GRAPH_Y - this.index*0.2, 5, 225);
-                    lineToAngle(X0 + n*W+W/2, GRAPH_Y - this.index*0.2, 5, 315);
+                    const cross_x = X0 + n*W + W/2;
+                    const cross_y = GRAPH_Y - this.index*0.2;
+                    ctx.moveTo(cross_x, cross_y);
+                    ctx.lineTo(cross_x - 3, cross_y - 3);
+                    ctx.moveTo(cross_x, cross_y);
+                    ctx.lineTo(cross_x + 3, cross_y - 3);
+                    ctx.moveTo(cross_x, cross_y);
+                    ctx.lineTo(cross_x - 3, cross_y + 3);
+                    ctx.moveTo(cross_x, cross_y);
+                    ctx.lineTo(cross_x + 3, cross_y + 3);
+                    ctx.stroke();
+//                    lineToAngle(cross_x, cross_y, 5, 45);
+//                    lineToAngle(cross_x, cross_y, 5, 135);
+//                    lineToAngle(cross_x, cross_y, 5, 225);
+//                    lineToAngle(cross_x, cross_y, 5, 315);
                 }
             });
         }
