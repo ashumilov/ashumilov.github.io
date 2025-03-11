@@ -1,7 +1,7 @@
 const cnv = document.getElementById("canvas");
 const ctx = cnv.getContext("2d");
-const width = cnv.width = 600;
-const height = cnv.height = 800;
+const width = cnv.width = 1200;
+const height = cnv.height = 1200;
 const img = ctx.createImageData(width, height);
 const imgData = img.data;
 
@@ -31,16 +31,18 @@ ctx.font = "14px Arial";
 const W = 40;
 const PATHS_COUNT = 13;
 
-const ARROW_ANGLE0 = 180;
-const ARROW_SPEED = 5;
+const ARROW_ANGLE0 = 135;
+const ARROW_SPEED = 1;
 
 const X0 = 50;
 const Y0 = 50;
-const GRAPH_Y = 500; 
-const ARROW_Y = 550;
+const GRAPH_Y = 600; 
+const ARROW_Y = GRAPH_Y + 50;
 const ARROW_LENGTH = 30;
 const FINAL_ARROW_X = X0 + W* (PATHS_COUNT/2 - 1);
-const FINAL_ARROW_Y = 650;
+const FINAL_ARROW_Y = GRAPH_Y + 200;
+
+const SHIFT = 0;
 
 // helpers
 
@@ -198,9 +200,9 @@ const Ps = PATHS_COUNT;
 
 // define static objects
 
-const S = rect(X0 + 75, Y0, 2, 2, "S", false);  // source
-const D = rect(475, Y0, 2, 2, "P", false); // detector
-const Q = rect(300, 45, 10, 20, "Q");      // screen
+const S = rect(SHIFT + X0 + 75, Y0, 2, 2, "S", false);  // source
+const D = rect(SHIFT + 475, Y0, 2, 2, "P", false); // detector
+const Q = rect(SHIFT + 300, 45, 10, 20, "Q");      // screen
 
 // mirror
 const M = []
@@ -211,7 +213,7 @@ for (let i = 0; i < Ps; i++) {
 const L = []
 for (let i = 0; i < Ps; i++) {
     const w = 40;
-    L.push(rect(X0 + (i+1)*W - W/2, 495, 2, 5, String.fromCharCode(65 + i)));
+    L.push(rect(X0 + (i+1)*W - W/2, GRAPH_Y-5, 2, 5, String.fromCharCode(65 + i)));
 }
 // define dynamic objects
 // paths
@@ -243,7 +245,7 @@ function draw() {
     }
     // coordinates
     ctx.fillRect(50, GRAPH_Y, 40*13, 2);
-    ctx.fillRect(50, 300, 2, 200);
+    ctx.fillRect(50, GRAPH_Y - 300, 2, 300);
     ctx.fillText("Time", 40, 290);
     // paths
     for (let i = 0; i < Ps; i++) {
