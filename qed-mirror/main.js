@@ -24,25 +24,39 @@ document.addEventListener('DOMContentLoaded', function() {
 //    document.getElementById("content").innerHTML = text;
 });
 
-let frame = 0;
+let frame;
 
 ctx.font = "14px Arial";
 
 const W = 40;
 const PATHS_COUNT = 13;
 
-const ARROW_ANGLE0 = 135;
-const ARROW_SPEED = 1;
-
 const X0 = 50;
-const Y0 = 50;
-const GRAPH_Y = 600; 
+const Y0 = 100;
+const GRAPH_Y = 600;
+const GRAPH_HEIGHT = 300;
 const ARROW_Y = GRAPH_Y + 50;
 const ARROW_LENGTH = 30;
-const FINAL_ARROW_X = X0 + W* (PATHS_COUNT/2 - 1);
+const FINAL_ARROW_X = X0 + W * (PATHS_COUNT/2 - 2);
 const FINAL_ARROW_Y = GRAPH_Y + 200;
 
-const SHIFT = 0;
+let SHIFT = Number(document.getElementById("shift").value);
+let ARROW_SPEED = Number(document.getElementById("speed").value);
+let ARROW_ANGLE0 = Number(document.getElementById("angle").value);
+
+var updateB = document.getElementById("update");
+updateB.addEventListener("click", function(event) {
+    SHIFT = Number(document.getElementById("shift").value);
+    ARROW_SPEED = Number(document.getElementById("speed").value);
+    ARROW_ANGLE0 = Number(document.getElementById("angle").value);
+    ctx.clearRect(0, 0, width, height);
+    init();
+    draw();
+});
+var resetB = document.getElementById("reset");
+resetB.addEventListener("click", function(event) {
+    window.location.reload();
+});
 
 // helpers
 
@@ -117,7 +131,6 @@ function rect(x, y, width, height, text, bottom = true, fill = true) {
 
 function calculatePoints(stops) {
     const length = stops.length;
-    //    console.log("length:", length);
     if (length == 0) {
         return [];
     } else if (length == 1) {
@@ -125,11 +138,9 @@ function calculatePoints(stops) {
     }
     let points = [];   
     for (let i = 0; i < length - 1; i++) {
-        //        console.log("i:", i);
         const from = stops[i];
         const to = stops[i + 1];
         const maxPoints = Math.sqrt(Math.abs(to.x - from.x) ** 2 + Math.abs(to.y - from.y) ** 2);
-        //        console.log("from:", from, "to:", to);
         for (let j = 0; j < maxPoints; j++) {
             const dx = to.x - from.x;
             const dy = to.y - from.y;
@@ -142,12 +153,10 @@ function calculatePoints(stops) {
         }
         points.push({x: to.x, y: to.y});
     }
-    //    console.log(points);
     return points;
 }
 
 function path(n, stops) {
-    //    console.log("stops:", stops);
     return {
         n: n,
         points: calculatePoints(stops),
@@ -167,7 +176,7 @@ function path(n, stops) {
         },
         draw() {
             this.points.forEach((p, i) => {
-                if (i <= this.index) {
+                if (i == this.index) {
                     // path
                     ctx.fillRect(p.x, p.y, 1, 1);
                     // arrow
@@ -198,58 +207,66 @@ function path(n, stops) {
 
 const Ps = PATHS_COUNT;
 
-// define static objects
+let S, D, Q, M, L, P;
 
-const S = rect(SHIFT + X0 + 75, Y0, 2, 2, "S", false);  // source
-const D = rect(SHIFT + 475, Y0, 2, 2, "P", false); // detector
-const Q = rect(SHIFT + 300, 45, 10, 20, "Q");      // screen
+function init() {
+    frame = 0;
+    ctx.fillStyle = 'black';
+    ctx.strokeStyle = 'black';
 
-// mirror
-const M = []
-for (let i = 0; i < Ps; i++) {
-    M.push(rect(X0 + i*W, 200, W, 5, String.fromCharCode(65 + i), true, false));
-}
-// labels
-const L = []
-for (let i = 0; i < Ps; i++) {
-    const w = 40;
-    L.push(rect(X0 + (i+1)*W - W/2, GRAPH_Y-5, 2, 5, String.fromCharCode(65 + i)));
-}
-// define dynamic objects
-// paths
-let P = [];
-for (let i = 0; i < Ps; i++) {
-    const S_stop = {x: S.x, y: S.y};
-    const M_stop = {x: M[i].x + W/2, y: M[i].y};
-    const D_stop = {x: D.x, y: D.y};
-    //    console.log("path:", i, p)
-    P.push(path(i, [S_stop, M_stop, D_stop]));
+    // define static objects
+    S = rect(SHIFT + X0 + 75, Y0, 2, 2, "S", false);  // source
+    D = rect(SHIFT + X0 + 450, Y0, 2, 2, "P", false); // detector
+    Q = rect(SHIFT + X0 + 250, Y0 - 20, 10, 20, "Q");      // screen
+
+    // mirror
+    M = []
+    for (let i = 0; i < Ps; i++) {
+        M.push(rect(X0 + i*W, 200, W, 5, String.fromCharCode(65 + i), true, false));
+    }
+    // labels
+    L = []
+    for (let i = 0; i < Ps; i++) {
+        const w = 40;
+        L.push(rect(X0 + (i+1)*W - W/2, GRAPH_Y-5, 2, 5, String.fromCharCode(65 + i)));
+    }
+    // define dynamic objects
+    // paths
+    P = [];
+    for (let i = 0; i < Ps; i++) {
+        const S_stop = {x: S.x, y: S.y};
+        const M_stop = {x: M[i].x + W/2, y: M[i].y};
+        const D_stop = {x: D.x, y: D.y};
+        P.push(path(i, [S_stop, M_stop, D_stop]));
+    }
 }
 
 function draw() {
-    ctx.fillStyle = 'black';
-    ctx.strokeStyle = 'black';
+    // mirror
+    for (let i = 0; i < Ps; i++) {
+        M[i].draw();
+    }
+
+}
+
+function redraw() {
     // source
     S.draw();
     // detector
     D.draw();
     // screen
     Q.draw();
-    // mirror
-    for (let i = 0; i < Ps; i++) {
-        M[i].draw();
-    }
-    // labels
-    for (let i = 0; i < Ps; i++) {
-        L[i].draw();
-    }
-    // coordinates
-    ctx.fillRect(50, GRAPH_Y, 40*13, 2);
-    ctx.fillRect(50, GRAPH_Y - 300, 2, 300);
-    ctx.fillText("Time", 40, 290);
     // paths
     for (let i = 0; i < Ps; i++) {
         P[i].draw();
+    }
+    // coordinates
+    ctx.fillRect(50, GRAPH_Y, 40*13, 2);
+    ctx.fillRect(50, GRAPH_Y - GRAPH_HEIGHT, 2, 300);
+    ctx.fillText("Time", 40, 290);
+    // labels
+    for (let i = 0; i < Ps; i++) {
+        L[i].draw();
     }
     // draw final arrow
     if (P.every(p => p.stopped)) {
@@ -257,11 +274,9 @@ function draw() {
         let y = FINAL_ARROW_Y;
         let A = [];
         P.forEach(r => { A.push(r.angle); });
-        console.log("arrows:", A);
         A.forEach(angle => {
             drawArrow2(x, y, ARROW_LENGTH, angle);
             const head = arrowHead(x, y, ARROW_LENGTH, angle);
-            console.log("arrow:", x, y, angle, head);
             x = head.x;
             y = head.y;
         })
@@ -269,6 +284,7 @@ function draw() {
         const length = lengthFromLine(FINAL_ARROW_X, FINAL_ARROW_Y, x, y);
         ctx.strokeStyle = 'red';
         drawArrow2(FINAL_ARROW_X, FINAL_ARROW_Y, length, angle);
+        ctx.strokeStyle = 'black';
         return false;
     }
     return true;
@@ -281,13 +297,16 @@ function step() {
     }
 }
 
+init();
+draw();
+
 window.requestAnimationFrame(update);
 
 function update() {
-    ctx.clearRect(0, 0, width, height);
-    if (draw()) {
+    ctx.clearRect(0, GRAPH_Y - GRAPH_HEIGHT, width, height);
+    if (redraw()) {
         step();
         frame++;
-        window.requestAnimationFrame(update);
     }
+    window.requestAnimationFrame(update);
 }
