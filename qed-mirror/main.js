@@ -31,14 +31,14 @@ ctx.font = "14px Arial";
 const W = 40;
 const PATHS_COUNT = 13;
 
-const X0 = 50;
-const Y0 = 100;
-const GRAPH_Y = 600;
+const X0 = 20;
+const Y0 = 30;
+const GRAPH_Y = Y0 + 550;
 const GRAPH_HEIGHT = 300;
 const ARROW_Y = GRAPH_Y + 50;
 const ARROW_LENGTH = 30;
-const FINAL_ARROW_X = X0 + W * (PATHS_COUNT/2 - 2);
-const FINAL_ARROW_Y = GRAPH_Y + 200;
+const FINAL_ARROW_X = X0 + W * PATHS_COUNT + 150;
+const FINAL_ARROW_Y = GRAPH_Y - GRAPH_HEIGHT/2;
 
 let SHIFT = Number(document.getElementById("shift").value);
 let ARROW_SPEED = Number(document.getElementById("speed").value);
@@ -217,7 +217,7 @@ function init() {
     // define static objects
     S = rect(SHIFT + X0 + 75, Y0, 2, 2, "S", false);  // source
     D = rect(SHIFT + X0 + 450, Y0, 2, 2, "P", false); // detector
-    Q = rect(SHIFT + X0 + 250, Y0 - 20, 10, 20, "Q");      // screen
+    Q = rect(SHIFT + X0 + 250, Y0 - 10, 10, 20, "Q");      // screen
 
     // mirror
     M = []
@@ -261,9 +261,9 @@ function redraw() {
         P[i].draw();
     }
     // coordinates
-    ctx.fillRect(50, GRAPH_Y, 40*13, 2);
-    ctx.fillRect(50, GRAPH_Y - GRAPH_HEIGHT, 2, 300);
-    ctx.fillText("Time", 40, 290);
+    ctx.fillRect(X0, GRAPH_Y, 40*13, 2);
+    ctx.fillRect(X0, GRAPH_Y - GRAPH_HEIGHT, 2, 300);
+    ctx.fillText("Time", X0 - 10, GRAPH_Y - GRAPH_HEIGHT - 10);
     // labels
     for (let i = 0; i < Ps; i++) {
         L[i].draw();
