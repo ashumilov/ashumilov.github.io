@@ -1,6 +1,6 @@
 const cnv = document.getElementById("canvas");
 const ctx = cnv.getContext("2d");
-const width = cnv.width = 1200;
+const width = cnv.width = 1000;
 const height = cnv.height = 1200;
 const img = ctx.createImageData(width, height);
 const imgData = img.data;
