@@ -34,7 +34,7 @@ const PATHS_COUNT = 13;
 const X0 = 20;
 const Y0 = 30;
 const GRAPH_Y = Y0 + 550;
-const GRAPH_HEIGHT = 300;
+const GRAPH_HEIGHT = 320;
 const ARROW_Y = GRAPH_Y + 50;
 const ARROW_LENGTH = 30;
 const FINAL_ARROW_X = X0 + W * PATHS_COUNT + 150;
@@ -262,7 +262,7 @@ function redraw() {
     }
     // coordinates
     ctx.fillRect(X0, GRAPH_Y, 40*13, 2);
-    ctx.fillRect(X0, GRAPH_Y - GRAPH_HEIGHT, 2, 300);
+    ctx.fillRect(X0, GRAPH_Y - GRAPH_HEIGHT, 2, 320);
     ctx.fillText("Time", X0 - 10, GRAPH_Y - GRAPH_HEIGHT - 10);
     // labels
     for (let i = 0; i < Ps; i++) {
